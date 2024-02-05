@@ -40,7 +40,7 @@ terraform import "module.cloudsql_postgres_sync_test.google_sql_database.additio
 
 You need to clone the existing GitLab repo, (which the read replica promoted as the primary.). 
 However, you are using a private repository, so you will need to create a personal access token in your GitLab account in order to clone the repository without any conflicts. (permission read_repository)
-![preview](./public/image.png?raw=true "screen")
+![preview](image.png?raw=true "screen")
 
 ```bash
  git clone https://oauth2:${Personal Access Tokens}@gitlab.com/username/myrepo.git
