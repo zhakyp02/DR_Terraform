@@ -24,7 +24,6 @@ terraform {
   # backend "gcs" {
   #   bucket      = "mystatefilehere" ## replace with a GCS bucket name
   #   prefix      = "tfdefaulttt/"
-  #   # credentials = "var.serviceaccount"
   # }
 
   provider_meta "google" {
