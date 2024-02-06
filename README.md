@@ -48,6 +48,8 @@ However, you are using a private repository, so you will need to create a person
 ```bash
  git clone https://oauth2:${Personal Access Tokens}@gitlab.com/username/myrepo.git
 ```
+
+![preview](image.png?raw=true "screen")
 A GCP service account key must be available and exported as `GOOGLE_APPLICATION_CREDENTIALS` for authentication.
 Additionally, you need to change the resource names based on your module's resource names. `module.cloudsql_postgres_sync_test.google_sql_database_instance.postgres_db_instance` 
 
