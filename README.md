@@ -4,6 +4,7 @@
 
 To address potential issues arising from regional outages or database corruption, a disaster recovery solution has been implemented using Terraform. In this setup, a new VM instance is created, and a Bash script is employed to execute essential Terraform commands. This approach ensures the seamless promotion of a read-replica instance to the primary instance within Google Cloud Platform (GCP), resolving any state file conflicts that may occur during the process
 
+`Note:` You need to first create a new repository in GitLab and then configure it by following this readme.
 ### 1. Startup Script
 
 The startup script (`script.sh`) performs the following tasks:
@@ -50,8 +51,26 @@ However, you are using a private repository, so you will need to create a person
 ```
 
 A GCP service account key must be available as a variable in gitlab and exported as `GOOGLE_APPLICATION_CREDENTIALS` for authentication.
+Note: variable name (key) should be like this TF_VAR_serviceaccount. This TF_VAR will be used as a variable in Terraform.
+```hcl
+variable "serviceaccount" {
+}
 
-![preview](image2.png?raw=true "screen")
+resource "google_compute_instance" "web" {
+  # ... (VM configuration details)
+  metadata_startup_script = templatefile("./script.sh", { google_creds = file(var.serviceaccount) })
+
+}
+```
+script.sh
+```bash
+cat <<EOF > cred.json
+${google_creds}
+EOF
+export GOOGLE_APPLICATION_CREDENTIALS=cred.json
+
+```
+![preview](image2.jpeg?raw=true "screen")
 Additionally, you need to change the resource names based on your module's resource names. `module.cloudsql_postgres_sync_test.google_sql_database_instance.postgres_db_instance` 
 
 ### Terraform Backend
@@ -59,14 +78,14 @@ Additionally, you need to change the resource names based on your module's resou
 This Terraform configuration uses Google Cloud Storage (GCS) as the backend to store the Terraform state file. Update the `backend "gcs"` block in the `main.tf` file with your specific GCS bucket information.
 
 
-### 1. VM Creation
+### 2. VM Creation
 
-A preemptible VM is created with the specified machine type, zone, and other configurations. The startup script (`dot.sh`) is executed during VM creation.
+A preemptible VM is created with the specified machine type, zone, and other configurations. The startup script (`script.sh`) is executed during VM creation.
 
 ```hcl
 resource "google_compute_instance" "web" {
   # ... (VM configuration details)
-  metadata_startup_script = file("./script.sh")
+  metadata_startup_script = templatefile("./script.sh", { google_creds = file(var.serviceaccount) })
 }
 ```
 
@@ -89,7 +108,7 @@ The `provider "google"` block in `main.tf` configures the Google Cloud provider 
 
 ```hcl
 provider "google" {
-  project     = "endless-fire-408913"
+  project     = "<project_id>"
   region      = "us-central1"
 }
 ```
@@ -101,11 +120,3 @@ The `startup_script` triggers Terraform commands to address state file conflicts
 - Reads outputs from Terraform to get replica instance details.
 - Removes unwanted resources from Terraform state.
 - Imports necessary resources to Terraform state.
-
-## Conclusion
-
-This Terraform setup provides an automated solution for disaster recovery, allowing for the promotion of read-replica instances in the event of a regional outage or database corruption. Adjust configurations as needed for your specific environment.
-
----
-
-Now, the documentation includes the startup script for clarity. Feel free to modify it further based on your specific details or add more sections as required.
