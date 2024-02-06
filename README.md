@@ -51,7 +51,7 @@ However, you are using a private repository, so you will need to create a person
 ```
 
 A GCP service account key must be available as a variable in gitlab and exported as `GOOGLE_APPLICATION_CREDENTIALS` for authentication.
-Note: variable name (key) should be like this TF_VAR_serviceaccount. This TF_VAR will be used as a variable in Terraform.
+Note: variable name (key) should be like this TF_VAR_serviceaccount. This TF_VAR_serviceaccount will be used as a variable in Terraform.
 ```hcl
 variable "serviceaccount" {
 }
