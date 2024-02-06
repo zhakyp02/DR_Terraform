@@ -32,8 +32,8 @@ terraform state rm module.cloudsql_postgres_rr_test.google_sql_database_instance
 terraform state rm module.cloudsql_postgres_sync_test.google_sql_database.additional_databases
 terraform state rm module.cloudsql_postgres_rr_test.random_id.db_name_suffix_replica
 terraform state list
-terraform import "module.cloudsql_postgres_sync_test.google_sql_database_instance.postgres_db_instance" "projects/endless-fire-408913/instances/$read_replica" 
-terraform import "module.cloudsql_postgres_sync_test.google_sql_database.additional_databases[0]" "projects/endless-fire-408913/instances/${read_replica}/databases/additional-database" 
+terraform import "module.cloudsql_postgres_sync_test.google_sql_database_instance.postgres_db_instance" "projects/<project_id>/instances/$read_replica" 
+terraform import "module.cloudsql_postgres_sync_test.google_sql_database.additional_databases[0]" "projects/<project_id>/instances/${read_replica}/databases/additional-database" 
 ```
 
 ### Setup Startup Script
