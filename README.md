@@ -20,13 +20,16 @@ sudo apt-get install terraform -y
 sudo apt-get install git -y
 git clone https://oauth2:<personal_access_token>@gitlab.com/gcp2554514/cloudsql.git
 cd cloudsql/root-test/root
-export GOOGLE_APPLICATION_CREDENTIALS=<vars.service_account>
+cat <<EOF > cred.json
+${google_creds}
+EOF
+export GOOGLE_APPLICATION_CREDENTIALS=cred.json
 terraform init -reconfigure
-read_replica=$(terraform output replica_instance_name)
+export read_replica=$(terraform output replica_instance_name)
 export read_replica=$(echo $read_replica | tr -d '"'| tr -d '[]' | tr -d ',' | tr -d ' ')
-replica_region=$(terraform output replica_region)
-replica_region=$(echo $replica_region | tr -d '"'| tr -d '[]' | tr -d ',')
-master_region=$(terraform output master_region)
+export replica_region=$(terraform output replica_region)
+export replica_region=$(echo $replica_region | tr -d '"'| tr -d '[]' | tr -d ',')
+export master_region=$(terraform output master_region)
 terraform state rm module.cloudsql_postgres_sync_test.google_sql_database_instance.postgres_db_instance 
 terraform state rm module.cloudsql_postgres_rr_test.google_sql_database_instance.replicas
 terraform state rm module.cloudsql_postgres_sync_test.google_sql_database.additional_databases
